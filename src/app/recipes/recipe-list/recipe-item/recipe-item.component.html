@@ -1,0 +1,14 @@
+<a (click)="onSelected()" href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="row">
+        <div class="col-8">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ recipe.name }}</h5>
+            </div>
+            <p class="mb-1">{{ recipe.description }}</p>
+        </div>
+        <div class="col-4">
+            <img [src]="recipe.imagePath" class="rounded mx-auto d-block rounded-circle img-fluid"
+                 alt="{{ recipe.name }}">
+        </div>
+    </div>
+</a>

@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-12">
+        <img src="" class="img-fluid"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <h1>{{ recipe.name }}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <!-- Example single danger button -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                Manage Recipe
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item alert-info alert-link" href="#"><i class="fas fa-plus-circle"></i> To
+                    Shopping List</a>
+                <a class="dropdown-item alert-link" href="#"><i class="fas fa-edit"></i> Edit</a>
+                <a class="dropdown-item alert-danger alert-link" href="#"><i class="fas fa-trash-alt"></i>
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <img [src]="recipe.imagePath" class="rounded mx-auto d-block" [alt]="recipe.name">
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        {{ recipe.description }}
+    </div>
+</div>
