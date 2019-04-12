@@ -32,20 +32,21 @@ export class RecipeEditComponent implements OnInit {
         this.route.params.subscribe(
             (params: Params) => {
                 this.id = +params['id'];
-                const recipe: Recipe = this.recipeService.getRecipe(this.id);
                 this.editMode = params['id'] != null;
-                this.ingredients = this.shoppingListService.getIngredients();
-                this.recipeName = recipe.name;
-                this.recipeDescription = recipe.description;
-                this.recipeImagePath = recipe.imagePath;
-                this.ingredients = recipe.ingredients;
-                if (recipe == null) {
-                    Swal.fire(
-                        'Bad link',
-                        'No recipe found with id ' + this.id + '!',
-                        'error'
-                    );
-                    this.router.navigate(['/recipes']);
+                if (this.editMode) {
+                    const recipe: Recipe = this.recipeService.getRecipe(this.id);
+                    this.recipeName = recipe.name;
+                    this.recipeDescription = recipe.description;
+                    this.recipeImagePath = recipe.imagePath;
+                    this.ingredients = recipe.ingredients;
+                    if (recipe == null) {
+                        Swal.fire(
+                            'Bad link',
+                            'No recipe found with id ' + this.id + '!',
+                            'error'
+                        );
+                        this.router.navigate(['/recipes']);
+                    }
                 }
             }
         );
@@ -54,7 +55,10 @@ export class RecipeEditComponent implements OnInit {
 
 
     hasIngredient(tempIngredient: Ingredient) {
-        return this.ingredients.filter(ingredient => ingredient.id == tempIngredient.id).length > 0 ? true : false;
+        if (this.ingredients != null && this.ingredients.length > 0) {
+            return this.ingredients.filter(ingredient => ingredient.id == tempIngredient.id).length > 0 ? true : false;
+        }
+        return false;
     }
 
     addIngredient(ingredient: Ingredient) {
@@ -67,7 +71,12 @@ export class RecipeEditComponent implements OnInit {
         if (this.editMode) {
             this.recipeService.updateRecipe({
                 id: this.id,
-                recipeDetails: {recipeName: this.recipeName, recipeDescription: this.recipeDescription, recipeImagePath: this.recipeImagePath, recipeIngredients: this.ingredients}
+                recipeDetails: {
+                    recipeName: this.recipeName,
+                    recipeDescription: this.recipeDescription,
+                    recipeImagePath: this.recipeImagePath,
+                    recipeIngredients: this.ingredients
+                }
             });
             Swal.fire(
                 'Updated',

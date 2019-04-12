@@ -3,6 +3,7 @@ import {Recipe} from './recipe.model';
 import {Ingredient} from '../shared/Ingredient.model';
 import {ShoppingListService} from '../shopping-list/shopping-list.service';
 import Swal from 'sweetalert2';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class RecipeService {
@@ -31,13 +32,12 @@ export class RecipeService {
     }
 
     saveRecipe(recipe: Recipe) {
-        if (this.recipes.filter(tempRecipe => tempRecipe.id == recipe.id).length > 0) {
-            this.recipes.push(recipe);
-        }
+        this.recipes.push(recipe);
+        console.log('Number of recipes: ' + this.recipes.length);
     }
 
     getRecipes() {
-        return this.recipes.slice();
+        return this.recipes;
     }
 
     addIngredientsToShoppingList(ingredients: Ingredient[]) {

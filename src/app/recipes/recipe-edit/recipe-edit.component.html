@@ -1,9 +1,10 @@
-<div class="row">
+<div class="row mt-5">
+    <h3>Recipe Form</h3>
     <div class="col-md-12">
         <form>
             <div class="form-group">
                 <label>Name</label>
-                <input type="text" [(ngModel)]="recipeName" name="name" class="form-control" placeholder="Name..." />
+                <input type="text" [(ngModel)]="recipeName" name="name" class="form-control" placeholder="Name..."/>
             </div>
             <div class="form-group">
                 <label>Descritpion</label>
@@ -11,19 +12,20 @@
             </div>
             <div class="form-group">
                 <label>Image Path</label>
-                <input type="text" [(ngModel)]="recipeImagePath" name="imagePath" class="form-control" placeholder="Image path..." />
+                <input type="text" [(ngModel)]="recipeImagePath" name="imagePath" class="form-control"
+                       placeholder="Image path..."/>
             </div>
             <div class="form-group">
                 <label>Ingredients</label>
                 <select multiple class="form-control">
-                    <option *ngFor="let ingredient of ingredients" [value]="ingredient.id"
-                            [selected]="hasIngredient(ingredient)" [innerText]="ingredient.name"
+                    <option *ngFor="let ingredient of shoppingListService.getIngredients()" [value]="ingredient.id"
+                            [selected]="hasIngredient(ingredient)"
                             (select)="addIngredient(ingredient)">
                         {{ ingredient.name }}
                     </option>
                 </select>
             </div>
-            <button type="button" class="btn btn-primary" (click)="saveLocalRecipe()">Edit</button>
+            <button type="button" class="btn btn-primary" (click)="saveLocalRecipe()">Save</button>
         </form>
     </div>
 </div>
