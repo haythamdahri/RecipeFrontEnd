@@ -10,7 +10,7 @@ import {ShoppingListService} from '../shopping-list.service';
 })
 export class ShoppingEditComponent implements OnInit {
 
-  ingeredient: Ingredient = new Ingredient('', 0);
+  ingeredient: Ingredient = new Ingredient(0, '', 0);
 
   constructor(private shoppingListService: ShoppingListService) { }
 
@@ -19,7 +19,7 @@ export class ShoppingEditComponent implements OnInit {
 
   onAddItem() {
     this.shoppingListService.saveIngredient(this.ingeredient);
-    this.ingeredient = new Ingredient('', 0);
+    this.ingeredient = new Ingredient(0, '', 0);
   }
 
 }

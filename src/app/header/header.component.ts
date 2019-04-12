@@ -1,36 +1,31 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.css']
 })
-export class HeaderComponent{
+export class HeaderComponent {
 
-  search: string = '';
+    search: string = '';
 
-  @Output() featureSelected = new EventEmitter<string>();
+    constructor(private router: Router) {
 
-  constructor() {
+    }
 
-  }
+    onSearch(event: Event) {
+        console.log((<HTMLInputElement> event.target).value);
+        this.search = (<HTMLInputElement> event.target).value;
+    }
 
-  onSearch(event: Event) {
-    console.log((<HTMLInputElement>event.target).value);
-    this.search = (<HTMLInputElement>event.target).value;
-  }
-
-  onDisplaySearch() {
-    Swal.fire({
-      title: 'Success!',
-      text: 'You typed ' + this.search,
-      type: 'success',
-      confirmButtonText: 'Cool'
-    });
-  }
-
-  onSelect(select: string){
-    this.featureSelected.emit(select);
-  }
+    onDisplaySearch() {
+        this.router.navigate(['/'], {
+            queryParams: {search: this.search},
+            fragment: 'loading',
+            preserveFragment: true,
+            preserveQueryParams: true
+        });
+    }
 }

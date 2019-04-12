@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Recipe} from '../recipe.model';
 import {RecipeService} from '../recipe.service';
-import {ShoppingListService} from '../../shopping-list/shopping-list.service';
+import {ActivatedRoute, Data, Params, Router} from '@angular/router';
 import {Ingredient} from '../../shared/Ingredient.model';
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-recipe-detail',
@@ -11,12 +12,30 @@ import {Ingredient} from '../../shared/Ingredient.model';
 })
 export class RecipeDetailComponent implements OnInit {
 
-  @Input() recipe: Recipe;
+  recipe: Recipe;
 
 
-  constructor(private recipeService: RecipeService) {}
+  constructor(private recipeService: RecipeService,
+              private route: ActivatedRoute,
+              private router: Router) {}
 
   ngOnInit() {
+    this.recipe = this.recipeService.getRecipe(+this.route.snapshot.params['id']);
+    this.route.params.subscribe(
+        (params: Params) => {
+          const tempRecipe = this.recipeService.getRecipe(+params['id']);
+          if( tempRecipe == null ){
+            Swal.fire(
+                'Bad link',
+                'No recipe found with id ' + params['id'] + '!',
+                'error'
+            );
+            this.router.navigate(['/recipes']);
+          } else {
+            this.recipe = tempRecipe;
+          }
+        }
+    );
   }
 
   addToShopping() {
@@ -24,6 +43,7 @@ export class RecipeDetailComponent implements OnInit {
       this.shoppingListService.saveIngredient(ingredient);
     });*/
     this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+    this.router.navigate(['/shopping-list'], {relativeTo: this.route});
   }
 
 }

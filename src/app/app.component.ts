@@ -7,10 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'RecipeBookFrontEnd';
-
-  loadedFeature: string = 'recipe';
-
-  onNavigate(selection: string) {
-    this.loadedFeature = selection;
-  }
 }
