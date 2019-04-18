@@ -1,25 +1,59 @@
 <div class="row">
     <div class="col-12">
-        <form>
+        <!-- We are using ngSubmit event instead of submit in order to prevent the default submit behavior to get data -->
+        <form (ngSubmit)="onSubmit()" #shoppingForm="ngForm">
             <div class="row">
                 <div class="col-sm-5 form-group">
                     <label>Name: </label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Name..."
-                           [(ngModel)]="ingeredient.name"/>
+                    <input type="text"
+                           #name="ngModel"
+                           class="form-control"
+                           id="name"
+                           name="name"
+                           [ngClass]="{'is-invalid': name.invalid && name.touched, 'is-valid': name.valid && name.touched}"
+                           placeholder="Name..."
+                           ngModel
+                           required
+                           pattern="^[a-zA-Z]*$"
+                           maxlength="50"
+                           minlength="5"/>
+
+                    <ng-container *ngIf="name.invalid && name.touched">
+                        <div class="invalid-feedback" *ngIf="name.errors.required">Name is required</div>
+                        <div class="invalid-feedback" *ngIf="name.errors.pattern">Name is invalid, it must be only letters. please choose an other one</div>
+                        <div class="invalid-feedback" *ngIf="name.errors.maxlength">Name exceeded max length({{name.value.length}})</div>
+                        <div class="invalid-feedback" *ngIf="name.errors.minlength">Name doesn't satisfy min length({{name.value.length}})</div>
+                    </ng-container>
                 </div>
                 <div class="col-sm-2 form-group">
                     <label>Amount: </label>
-                    <input type="number" class="form-control" id="amount" name="amount" placeholder="Amount..."
-                           [(ngModel)]="ingeredient.amount"/>
+                    <input type="number"
+                           class="form-control"
+                           id="amount"
+                           #amount="ngModel"
+                           name="amount"
+                           [ngClass]="{'is-invalid': amount.invalid && amount.touched, 'is-valid': amount.valid && amount.touched}"
+                           placeholder="Amount..."
+                           ngModel
+                           pattern="^[1-9]+[0-9]*$"
+                           required/>
+
+                    <ng-container *ngIf="amount.invalid && amount.touched">
+                        <div class="invalid-feedback" *ngIf="amount.errors.required">Amount is required</div>
+                        <div class="invalid-feedback" *ngIf="amount.errors.pattern">Amount must be positive value</div>
+                    </ng-container>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <button class="btn btn-success m-2" type="button" (click)="onAddItem()"><i
-                            class="fas fa-plus-circle"></i> Add
+                    <button class="btn m-2"
+                            type="submit"
+                            [ngClass]="{'btn-success': shoppingForm.valid, 'btn-danger': shoppingForm.invalid}"
+                            [disabled]="shoppingForm.invalid">
+                            <i class='fas fa-plus-circle'></i> {{ editMode ? 'update' : 'save' }}
                     </button>
-                    <button class="btn btn-danger m-2" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
-                    <button class="btn btn-primary m-2" type="reset"><i class="fas fa-cut"></i> Clear</button>
+                    <button class="btn btn-danger m-2" type="button" [disabled]="editedItem == null" (click)="onItemDelete()"><i class="fas fa-trash-alt"></i> Delete</button>
+                    <button class="btn btn-primary m-2" type="button" (click)="clearForm(shoppingForm)" ><i class="fas fa-cut"></i> Clear</button>
                 </div>
             </div>
         </form>

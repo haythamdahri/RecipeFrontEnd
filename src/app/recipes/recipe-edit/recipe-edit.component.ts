@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ShoppingListService} from '../../shopping-list/shopping-list.service';
 import {Ingredient} from '../../shared/Ingredient.model';
 import {RecipeService} from '../recipe.service';
 import {Recipe} from '../recipe.model';
 import Swal from 'sweetalert2';
-import has = Reflect.has;
+import {Form, FormArray, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 
 @Component({
     selector: 'app-recipe-edit',
@@ -15,11 +15,15 @@ import has = Reflect.has;
 export class RecipeEditComponent implements OnInit {
 
     id: number;
-    recipeName: string;
-    recipeDescription: string;
-    recipeImagePath: string;
-    ingredients: Ingredient[];
+    @ViewChild('name') recipeName: ElementRef;
+    @ViewChild('description') recipeDescription: ElementRef;
+    @ViewChild('image') recipeImagePath: ElementRef;
+    recipeIngredients: Ingredient[];
     editMode: boolean = false;
+
+    form : FormGroup;
+
+    recipe: Recipe;
 
     constructor(private route: ActivatedRoute,
                 private shoppingListService: ShoppingListService,
@@ -28,18 +32,20 @@ export class RecipeEditComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.form = new FormGroup({
+            name: new FormControl('', Validators.required),
+            description: new FormControl('', [Validators.required]),
+            imagePath: new FormControl('', [Validators.required]),
+            ingredients: new FormArray([])
+        });
 
         this.route.params.subscribe(
             (params: Params) => {
                 this.id = +params['id'];
                 this.editMode = params['id'] != null;
                 if (this.editMode) {
-                    const recipe: Recipe = this.recipeService.getRecipe(this.id);
-                    this.recipeName = recipe.name;
-                    this.recipeDescription = recipe.description;
-                    this.recipeImagePath = recipe.imagePath;
-                    this.ingredients = recipe.ingredients;
-                    if (recipe == null) {
+                    this.recipe = this.recipeService.getRecipe(this.id);
+                    if (this.recipe == null) {
                         Swal.fire(
                             'Bad link',
                             'No recipe found with id ' + this.id + '!',
@@ -47,6 +53,18 @@ export class RecipeEditComponent implements OnInit {
                         );
                         this.router.navigate(['/recipes']);
                     }
+                    this.form.setValue({
+                        name: this.recipe.name,
+                        description: this.recipe.description,
+                        imagePath: this.recipe.imagePath,
+                        ingredients: []
+                    });
+                    let controls: FormControl[];
+                    this.recipe.ingredients.forEach((ingredient: Ingredient) => {
+                        (<FormArray>this.form.get('ingredients')).push(new FormControl(ingredient.name, [Validators.required]));
+                    });
+                } else {
+                    this.recipe = new Recipe(0, '', '', '', []);
                 }
             }
         );
@@ -55,42 +73,29 @@ export class RecipeEditComponent implements OnInit {
 
 
     hasIngredient(tempIngredient: Ingredient) {
-        if (this.ingredients != null && this.ingredients.length > 0) {
-            return this.ingredients.filter(ingredient => ingredient.id == tempIngredient.id).length > 0 ? true : false;
+        if (this.recipe.ingredients != null && this.recipe.ingredients.length > 0) {
+            return this.recipe.ingredients.filter(ingredient => ingredient.id == tempIngredient.id).length > 0 ? true : false;
         }
         return false;
     }
 
-    addIngredient(ingredient: Ingredient) {
-        if (!this.hasIngredient(ingredient)) {
-            this.ingredients.push(ingredient);
+    checkIngredient(ingredient: Ingredient) {
+        if( this.hasIngredient(ingredient) ) {
+            this.recipe.ingredients = this.recipe.ingredients.filter(item => item.id !== ingredient.id);
+        } else {
+            this.recipe.ingredients.push(ingredient);
         }
     }
 
-    saveLocalRecipe() {
-        if (this.editMode) {
-            this.recipeService.updateRecipe({
-                id: this.id,
-                recipeDetails: {
-                    recipeName: this.recipeName,
-                    recipeDescription: this.recipeDescription,
-                    recipeImagePath: this.recipeImagePath,
-                    recipeIngredients: this.ingredients
-                }
-            });
-            Swal.fire(
-                'Updated',
-                'The recipe has been updated successflly!',
-                'success'
-            );
-        } else {
-            this.recipeService.saveRecipe(new Recipe(99, this.recipeName, this.recipeDescription, this.recipeImagePath, this.ingredients));
-            Swal.fire(
-                'Saved',
-                'The recipe has been saved successflly!',
-                'success'
-            );
-        }
-        this.router.navigate(['/recipes']);
+    onSubmit() {
+
+    }
+
+    onIngredientDrop(i: number) {
+        (<FormArray>this.form.get('ingredients')).removeAt(i);
+    }
+
+    onIngredientAdd() {
+        (<FormArray>this.form.get('ingredients')).push(new FormControl('', [Validators.required]));
     }
 }

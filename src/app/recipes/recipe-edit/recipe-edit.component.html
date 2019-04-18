@@ -1,31 +1,90 @@
 <div class="row mt-5">
     <h3>Recipe Form</h3>
     <div class="col-md-12">
-        <form>
+        <!-- We are using ngSubmit event instead of submit in order to prevent the default submit behavior to get data -->
+        <!-- In order to use reactive forms, we need to add ReactiveFormsModule in the imports of app.module.ts -->
+        <form (ngSubmit)="onSubmit()" [formGroup]="form">
             <div class="form-group">
                 <label>Name</label>
-                <input type="text" [(ngModel)]="recipeName" name="name" class="form-control" placeholder="Name..."/>
+                <input
+                        type="text"
+                        [ngClass]="{'is-invalid': !form.get('name').valid && form.get('name').touched, 'is-valid': form.get('name').valid && form.get('name').touched}"
+                        formControlName="name"
+                        class="form-control"
+                        placeholder="Name..."
+                />
+                <ng-container *ngIf="form.get('name').invalid && form.get('name').touched">
+                    <div class="invalid-feedback" *ngIf="form.get('name').errors.required">Name is required</div>
+                    <div class="invalid-feedback" *ngIf="form.get('name').errors.maxlength">Name exceeded max
+                        length({{form.get('name').value.length}})
+                    </div>
+                    <div class="invalid-feedback" *ngIf="form.get('name').errors.minlength">Name url doesn't satisfy min
+                        length({{form.get('name').value.length}})
+                    </div>
+                </ng-container>
             </div>
             <div class="form-group">
                 <label>Descritpion</label>
-                <textarea class="form-control" [(ngModel)]="recipeDescription" name="description" rows="3"></textarea>
+                <textarea
+                        [ngClass]="{'is-invalid': !form.get('description').valid && form.get('description').touched, 'is-valid': form.get('description').valid && form.get('description').touched}"
+                        class="form-control"
+                        formControlName="description"
+                        rows="3"></textarea>
+                <ng-container *ngIf="form.get('description').invalid && form.get('description').touched">
+                    <div class="invalid-feedback" *ngIf="form.get('description').errors.required">Description is
+                        required
+                    </div>
+                    <div class="invalid-feedback" *ngIf="form.get('description').errors.maxlength">Description exceeded
+                        max length({{form.get('description').value.length}})
+                    </div>
+                    <div class="invalid-feedback" *ngIf="form.get('description').errors.minlength">Description doesn't
+                        satisfy min length({{form.get('description').value.length}})
+                    </div>
+                </ng-container>
             </div>
             <div class="form-group">
                 <label>Image Path</label>
-                <input type="text" [(ngModel)]="recipeImagePath" name="imagePath" class="form-control"
-                       placeholder="Image path..."/>
+                <input
+                        type="text"
+                        [ngClass]="{'is-invalid': !form.get('imagePath').valid && form.get('imagePath').touched, 'is-valid': form.get('imagePath').valid && form.get('imagePath').touched}"
+                        formControlName="imagePath"
+                        class="form-control"
+                        placeholder="Image path..."
+                />
+                <ng-container *ngIf="form.get('imagePath').invalid && form.get('imagePath').touched">
+                    <div class="invalid-feedback" *ngIf="form.get('imagePath').errors.required">Image is required</div>
+                    <div class="invalid-feedback" *ngIf="form.get('imagePath').errors.maxlength">Image exceeded max
+                        length({{form.get('imagePath').value.length}})
+                    </div>
+                    <div class="invalid-feedback" *ngIf="form.get('imagePath').errors.minlength">Image url doesn't
+                        satisfy min length({{form.get('imagePath').value.length}})
+                    </div>
+                </ng-container>
             </div>
-            <div class="form-group">
-                <label>Ingredients</label>
-                <select multiple class="form-control">
-                    <option *ngFor="let ingredient of shoppingListService.getIngredients()" [value]="ingredient.id"
-                            [selected]="hasIngredient(ingredient)"
-                            (select)="addIngredient(ingredient)">
-                        {{ ingredient.name }}
-                    </option>
-                </select>
-            </div>
-            <button type="button" class="btn btn-primary" (click)="saveLocalRecipe()">Save</button>
+            <ng-container formArrayName="ingredients">
+                <div class="form-group form-inline"
+                     *ngFor="let control of form.get('ingredients').controls; let i = index">
+                    <label>Ingredient {{i + 1}}:</label>
+                    <input
+                            type="text" [formControlName]="i"
+                            class="form-control"
+                    />
+                    <button type="button" class="btn btn-info" (click)="onIngredientDrop(i)"><i
+                            class="fas fa-minus-circle"></i></button>
+                </div>
+                <button class="btn btn-info" (click)="onIngredientAdd()"><i class="far fa-plus-square"></i> Add
+                    ingredient
+                </button>
+            </ng-container>
+            <ng-container *ngIf="form.get('ingredients').invalid">
+                <div class="invalid-feedback">Ingredietns field is required</div>
+            </ng-container>
+            <hr>
+            <button [disabled]="!form.valid"
+                    type="submit"
+                    class="btn"
+                    [ngClass]="{'btn-success': form.valid, 'btn-danger': !form.valid}">Save
+            </button>
         </form>
     </div>
 </div>
