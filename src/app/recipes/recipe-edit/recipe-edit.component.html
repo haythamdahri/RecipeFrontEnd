@@ -4,6 +4,17 @@
         <!-- We are using ngSubmit event instead of submit in order to prevent the default submit behavior to get data -->
         <!-- In order to use reactive forms, we need to add ReactiveFormsModule in the imports of app.module.ts -->
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
+
+            <button [disabled]="!form.valid"
+                    type="submit"
+                    class="btn"
+                    [ngClass]="{'btn-success': form.valid, 'btn-danger': !form.valid}">Save
+            </button>
+            &nbsp; | &nbsp;
+            <button type="button"
+                    (click)="onCancelEdit()"
+                    class="btn btn-danger">Cancel
+            </button>
             <div class="form-group">
                 <label>Name</label>
                 <input
@@ -23,6 +34,7 @@
                     </div>
                 </ng-container>
             </div>
+
             <div class="form-group">
                 <label>Descritpion</label>
                 <textarea
@@ -61,30 +73,50 @@
                     </div>
                 </ng-container>
             </div>
+            <!-- Image Preview -->
+            <div class="row text-center mb-2" *ngIf="this.form.get('imagePath').value">
+                <div class="col-md-12">
+                    <img [src]="form.get('imagePath').value" class="img-fluid" [alt]="form.get('name').value">
+                </div>
+            </div>
+            <!-- End Image Preview -->
+
             <ng-container formArrayName="ingredients">
                 <div class="form-group form-inline"
                      *ngFor="let control of form.get('ingredients').controls; let i = index">
-                    <label>Ingredient {{i + 1}}:</label>
-                    <input
-                            type="text" [formControlName]="i"
-                            class="form-control"
-                    />
-                    <button type="button" class="btn btn-info" (click)="onIngredientDrop(i)"><i
-                            class="fas fa-minus-circle"></i></button>
+                    <ng-container [formGroupName]="i">
+                        <div class="row">
+                            <div class="col">
+                                <input
+                                        type="text" formControlName="name"
+                                        class="form-control"
+                                        placeholder="Name..."
+                                />
+                            </div>
+                            <div class="col">
+                                <input
+                                        type="text" formControlName="amount"
+                                        class="form-control"
+                                        placeholder="Amount..."
+                                />
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <button type="button" class="btn btn-info" (click)="onIngredientDrop(i)"><i
+                                    class="fas fa-minus-circle"></i></button>
+                        </div>
+
+                    </ng-container>
+
                 </div>
-                <button class="btn btn-info" (click)="onIngredientAdd()"><i class="far fa-plus-square"></i> Add
+                <button class="btn btn-info" type="button" (click)="onIngredientAdd()"><i class="far fa-plus-square"></i> Add
                     ingredient
                 </button>
             </ng-container>
             <ng-container *ngIf="form.get('ingredients').invalid">
                 <div class="invalid-feedback">Ingredietns field is required</div>
             </ng-container>
-            <hr>
-            <button [disabled]="!form.valid"
-                    type="submit"
-                    class="btn"
-                    [ngClass]="{'btn-success': form.valid, 'btn-danger': !form.valid}">Save
-            </button>
         </form>
     </div>
 </div>

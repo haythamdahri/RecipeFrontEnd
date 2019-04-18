@@ -46,4 +46,23 @@ export class RecipeDetailComponent implements OnInit {
     this.router.navigate(['/shopping-list'], {relativeTo: this.route});
   }
 
+    onRecipeDelete() {
+        Swal.fire({
+            title: 'Would you like to delete the recipe?',
+            text: "No revert after confirmation!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, quit!'
+        }).then((result) => {
+            this.recipeService.deleteRecipe(this.recipe.id);
+            Swal.fire(
+                'Recipe Deleted',
+                'The selected Recipe has been deleted successflly!',
+                'success'
+            );
+            this.router.navigateByUrl('/recipes');
+        });
+    }
 }
