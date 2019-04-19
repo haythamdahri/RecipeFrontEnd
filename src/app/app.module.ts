@@ -17,6 +17,8 @@ import {NotFoundPageComponent} from './not-found-page/not-found-page.component';
 import {RecipeStartComponent} from './recipe-start/recipe-start.component';
 import {RecipeEditComponent} from './recipes/recipe-edit/recipe-edit.component';
 import {RecipeService} from './recipes/recipe.service';
+import {HttpClientModule} from '@angular/common/http';
+import {DataStorageService} from './shared/data-storage.service';
 
 @NgModule({
     declarations: [
@@ -38,11 +40,13 @@ import {RecipeService} from './recipes/recipe.service';
         BrowserModule,
         AppRoutingModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientModule
     ],
     providers: [
         ShoppingListService,
-        RecipeService // We added the recipeService here in order to keep data available globaly either if we changed the page
+        RecipeService, // We added the recipeService here in order to keep data available globaly either if we changed the page
+        DataStorageService
     ],
     bootstrap: [AppComponent]
 })

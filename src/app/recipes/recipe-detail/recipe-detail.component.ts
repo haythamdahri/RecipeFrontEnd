@@ -54,15 +54,18 @@ export class RecipeDetailComponent implements OnInit {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, quit!'
+            confirmButtonText: 'Yes, delete!'
         }).then((result) => {
-            this.recipeService.deleteRecipe(this.recipe.id);
-            Swal.fire(
-                'Recipe Deleted',
-                'The selected Recipe has been deleted successflly!',
-                'success'
-            );
-            this.router.navigateByUrl('/recipes');
+            if( result.value ){
+                this.recipeService.deleteRecipe(this.recipe.id);
+                Swal.fire(
+                    'Recipe Deleted',
+                    'The selected Recipe has been deleted successflly!',
+                    'success'
+                );
+                this.router.navigateByUrl('/recipes');
+            }
+
         });
     }
 }
