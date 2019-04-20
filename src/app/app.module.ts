@@ -19,6 +19,10 @@ import {RecipeEditComponent} from './recipes/recipe-edit/recipe-edit.component';
 import {RecipeService} from './recipes/recipe.service';
 import {HttpClientModule} from '@angular/common/http';
 import {DataStorageService} from './shared/data-storage.service';
+import {SingupComponent} from './auth/singup/singup.component';
+import {SigninComponent} from './auth/signin/signin.component';
+import {AuthGuard} from './auth/auth-guard.service';
+
 
 @NgModule({
     declarations: [
@@ -34,7 +38,9 @@ import {DataStorageService} from './shared/data-storage.service';
         HomeComponent,
         NotFoundPageComponent,
         RecipeStartComponent,
-        RecipeEditComponent
+        RecipeEditComponent,
+        SingupComponent,
+        SigninComponent,
     ],
     imports: [
         BrowserModule,
@@ -46,7 +52,8 @@ import {DataStorageService} from './shared/data-storage.service';
     providers: [
         ShoppingListService,
         RecipeService, // We added the recipeService here in order to keep data available globaly either if we changed the page
-        DataStorageService
+        DataStorageService,
+        AuthGuard, // This service is used to protect access to recipes with all the children routes in case of anonymous user
     ],
     bootstrap: [AppComponent]
 })

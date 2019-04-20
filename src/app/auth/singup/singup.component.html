@@ -1,0 +1,54 @@
+<h1 class="display-3 text-center">Sign Up</h1>
+<hr>
+<div class="text-center w-75 ml-auto mr-auto">
+    <form #f="ngForm" (ngSubmit)="onSignup()">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email"
+                   class="form-control"
+                   [ngClass]="{'is-invalid': email.invalid && email.touched,
+                    'is-valid':  email.valid && email.touched}"
+                   id="email"
+                   placeholder="Email..."
+                   name="email"
+                   required
+                   ngModel
+                   #email="ngModel"
+            />
+            <ng-container *ngIf="email.invalid">
+                <div class="invalid-feedback" *ngIf="email.errors.required">Email is required</div>
+                <div class="invalid-feedback" *ngIf="email.errors.email">Email field must be a valid
+                    email
+                </div>
+            </ng-container>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password"
+                   class="form-control"
+                   [ngClass]="{'is-invalid': password.invalid && password.touched,
+                    'is-valid':  password.valid && password.touched}"
+                   id="password"
+                   required=""
+                   placeholder="Password..."
+                   name="password"
+                   ngModel
+                   #password="ngModel"
+                   pattern="^[a-zA-Z]+[0-9]+$"
+                   minlength="6"
+            />
+            <ng-container *ngIf="password.invalid">
+                <div class="invalid-feedback" *ngIf="password.errors.required">Password is required
+                </div>
+                <div class="invalid-feedback" *ngIf="password.errors.pattern">Weak password, please
+                    respect password requirements
+                </div>
+                <div class="invalid-feedback" *ngIf="password.errors.minlength">Invalid password length, please provide
+                    a longer password
+                </div>
+            </ng-container>
+        </div>
+        <button type="submit" [disabled]="f.invalid" class="btn btn-primary">Sign up</button>
+    </form>
+</div>
+

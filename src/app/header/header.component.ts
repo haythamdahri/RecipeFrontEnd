@@ -1,30 +1,45 @@
-import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import Swal from 'sweetalert2';
 import {Router} from '@angular/router';
 import {RecipeService} from '../recipes/recipe.service';
 import {Subscription} from 'rxjs';
 import {DataStorageService} from '../shared/data-storage.service';
+import {AuthService} from '../shared/auth.service';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnDestroy{
+export class HeaderComponent implements OnDestroy, OnInit {
 
     search: string = '';
+    appName;
     subscription: Subscription;
 
     constructor(private router: Router,
-                private dataStorageService: DataStorageService) {
+                private dataStorageService: DataStorageService,
+                private authService: AuthService) {
 
     }
 
+    ngOnInit(): void {
+        if (this.authService.isAuthenticated()) {
+            this.appName = this.dataStorageService.getApplicationName();
+        } else {
+            this.appName = new Promise(
+                (resolve, reject) => {
+                    resolve('Default app name');
+                }
+            );
+        }
+    }
+
     ngOnDestroy(): void {
-        if( this.subscription ){
+        if (this.subscription) {
             this.subscription.unsubscribe();
         }
-
+        this.appName = '';
     }
 
     onSearch(event: Event) {
@@ -61,5 +76,9 @@ export class HeaderComponent implements OnDestroy{
 
     onFetch() {
         this.dataStorageService.fetchRecipes();
+    }
+
+    onLogout() {
+        this.authService.logout();
     }
 }

@@ -1,0 +1,47 @@
+<h1 class="display-3 text-center">Sign In</h1>
+<hr>
+<div class="text-center w-75 ml-auto mr-auto">
+    <form [formGroup]="signinForm" (ngSubmit)="onSignin()">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email"
+                   class="form-control"
+                   [ngClass]="{'is-invalid': signinForm.get('email').invalid && signinForm.get('email').touched,
+                    'is-valid':  signinForm.get('email').valid && signinForm.get('email').touched}"
+                   id="email"
+                   name="email"
+                   placeholder="Email..."
+                   formControlName="email"
+            />
+            <ng-container *ngIf="signinForm.get('email').invalid">
+                <div class="invalid-feedback" *ngIf="signinForm.get('email').errors.required">Email is required
+                </div>
+                <div class="invalid-feedback" *ngIf="signinForm.get('email').errors.email">Email field must be a
+                    valid email
+                </div>
+            </ng-container>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password"
+                   class="form-control"
+                   [ngClass]="{'is-invalid': signinForm.get('password').invalid && signinForm.get('password').touched,
+                    'is-valid':  signinForm.get('password').valid && signinForm.get('password').touched}"
+                   id="password"
+                   name="password"
+                   placeholder="Password..."
+                   formControlName="password"
+            />
+            <ng-container *ngIf="signinForm.get('password').invalid">
+                <div class="invalid-feedback" *ngIf="signinForm.get('password').errors.required">Password is
+                    required
+                </div>
+                <div class="invalid-feedback" *ngIf="signinForm.get('password').errors.pattern">Weak password,
+                    please respect the required password
+                </div>
+            </ng-container>
+        </div>
+        <button type="submit" [disabled]="signinForm.invalid" class="btn btn-primary">Sign in</button>
+    </form>
+</div>
+

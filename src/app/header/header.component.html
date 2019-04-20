@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" [routerLinkActive]="'active'">
-                <a class="nav-link" routerLink="/"><i class="fas fa-home"></i> Recipe Application <span
+                <a class="nav-link" routerLink="/"><i class="fas fa-home"></i> {{ appName | async }} <span
                         class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item" [routerLinkActive]="'active'">
@@ -16,22 +16,37 @@
             <li class="nav-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link" routerLink="/shopping-list">Shopping List</a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Manage
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" (click)="onSave()" style="cursor: pointer">Save Data</a>
-                    <a class="dropdown-item" (click)="onFetch()" style="cursor: pointer">Fetch Data</a>
-                </div>
-            </li>
+            <ng-template class="my-2 my-lg-0 float-right" [ngIf]="authService.isAuthenticated()">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Manage
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" (click)="onSave()" style="cursor: pointer">Save Data</a>
+                        <a class="dropdown-item" (click)="onFetch()" style="cursor: pointer">Fetch Data</a>
+                    </div>
+                </li>
+            </ng-template>
+            <ng-template [ngIf]="authService.isAuthenticated()">
+                <li class="nav-item my-2 my-lg-0" [routerLinkActive]="'active'"
+                    [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link" style="cursor: pointer;" (click)="onLogout()">Logout</a>
+                </li>
+            </ng-template>
+            <ng-template [ngIf]="!authService.isAuthenticated()">
+                <li class="nav-item my-2 my-lg-0" [routerLinkActive]="'active'"
+                    [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link" routerLink="/signin">Sign in</a>
+                </li>
+                <li class="nav-item my-2 my-lg-0" [routerLinkActive]="'active'"
+                    [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link" routerLink="/signup">Sign up</a>
+                </li>
+            </ng-template>
+
+
         </ul>
-        <div class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" (input)="onSearch($event)" placeholder="Search"
-                   aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" (click)="onDisplaySearch()" type="submit">Search
-            </button>
-        </div>
     </div>
 </nav>
