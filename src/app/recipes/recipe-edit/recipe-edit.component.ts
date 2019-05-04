@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {ShoppingListService} from '../../shopping-list/shopping-list.service';
 import {Ingredient} from '../../shared/Ingredient.model';
 import {RecipeService} from '../recipe.service';
 import {Recipe} from '../recipe.model';
@@ -26,7 +25,6 @@ export class RecipeEditComponent implements OnInit {
     recipe: Recipe;
 
     constructor(private route: ActivatedRoute,
-                private shoppingListService: ShoppingListService,
                 private recipeService: RecipeService,
                 private router: Router) {
     }
@@ -114,7 +112,7 @@ export class RecipeEditComponent implements OnInit {
                 this.editMode = true;
             }
             Swal.fire(
-                'Data saed',
+                'Data saved',
                 'Recipe has been save successflly!',
                 'success'
             );
@@ -155,5 +153,9 @@ export class RecipeEditComponent implements OnInit {
                 this.router.navigate(['/recipes']);
             }
         });
+    }
+
+    getControls() {
+        return (<FormArray>this.form.get('ingredients')).controls;
     }
 }

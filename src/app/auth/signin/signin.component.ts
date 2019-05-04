@@ -2,6 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import Swal from "sweetalert2";
 import {AuthService} from '../../shared/auth.service';
+import * as AuthActions from '../store/auth.actions';
+import {Store} from '@ngrx/store';
 
 @Component({
     selector: 'app-signin',
@@ -12,7 +14,8 @@ export class SigninComponent implements OnInit {
 
     @ViewChild('signinForm') signinForm: FormGroup;
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService,
+                private store: Store<AuthActions.UserCredentials>) {
     }
 
     ngOnInit() {

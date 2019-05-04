@@ -1,10 +1,10 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import Swal from 'sweetalert2';
 import {Router} from '@angular/router';
-import {RecipeService} from '../recipes/recipe.service';
+import {RecipeService} from '../../recipes/recipe.service';
 import {Subscription} from 'rxjs';
-import {DataStorageService} from '../shared/data-storage.service';
-import {AuthService} from '../shared/auth.service';
+import {DataStorageService} from '../../shared/data-storage.service';
+import {AuthService} from '../../shared/auth.service';
 
 @Component({
     selector: 'app-header',
@@ -59,6 +59,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     onSave() {
         this.subscription = this.dataStorageService.storeRecipes().subscribe(
             (response) => {
+                console.log(response);
                 Swal.fire(
                     'Data saved successflly',
                     'Local data has been saved successflly!',

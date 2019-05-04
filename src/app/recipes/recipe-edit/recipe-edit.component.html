@@ -83,7 +83,7 @@
 
             <ng-container formArrayName="ingredients">
                 <div class="form-group form-inline"
-                     *ngFor="let control of form.get('ingredients').controls; let i = index">
+                     *ngFor="let control of getControls(); let i = index">
                     <ng-container [formGroupName]="i">
                         <div class="row">
                             <div class="col">

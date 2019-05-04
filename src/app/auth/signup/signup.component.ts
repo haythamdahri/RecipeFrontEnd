@@ -5,10 +5,10 @@ import {AuthService} from '../../shared/auth.service';
 
 @Component({
     selector: 'app-singup',
-    templateUrl: './singup.component.html',
-    styleUrls: ['./singup.component.css']
+    templateUrl: './signup.component.html',
+    styleUrls: ['./signup.component.css']
 })
-export class SingupComponent implements OnInit {
+export class SignupComponent implements OnInit {
 
     @ViewChild('f') form: NgForm;
 

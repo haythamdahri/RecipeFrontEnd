@@ -8,7 +8,7 @@ import {Router} from '@angular/router';
 })
 export class AuthService {
 
-    token: string;
+    private token: string;
 
     constructor(private router: Router) {
     }
